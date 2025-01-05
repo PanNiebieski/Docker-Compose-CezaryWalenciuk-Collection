@@ -1,0 +1,104 @@
+### Opis pliku `docker-compose.yml` dla Elasticsearch i Kibana
+
+Poniższy skrypt definiuje konfigurację usług Elasticsearch i Kibana w środowisku Docker, umożliwiając uruchamianie oraz instalację wtyczek dla Elasticsearch.
+
+---
+
+#### **Wersja Docker Compose**
+```yaml
+version: '3.8'
+```
+Skrypt używa wersji `3.8` pliku `docker-compose`, która jest kompatybilna z wieloma funkcjami Dockera.
+
+---
+
+### **Usługi**
+
+#### **1. Elasticsearch**
+- **Obraz**: `docker.elastic.co/elasticsearch/elasticsearch:8.15.3`
+  - Elasticsearch w wersji `8.15.3`.
+- **Nazwa kontenera**: `elasticsearch`.
+
+##### **Ustawienia środowiskowe**:
+- `discovery.type=single-node`: Konfiguracja dla jednowęzłowego klastra.
+- `xpack.security.enabled=false`: Wyłącza mechanizmy bezpieczeństwa, aby uprościć konfigurację.
+- `bootstrap.memory_lock=true`: Zapobiega wymianie pamięci Elasticsearch na dysk.
+- `ES_JAVA_OPTS=-Xms1g -Xmx1g`: Ustawia minimalną i maksymalną ilość pamięci JVM na 1 GB.
+
+##### **Porty**:
+- `9200:9200`: Port dla API REST Elasticsearch.
+- `9300:9300`: Port transportowy używany do komunikacji między węzłami Elasticsearch.
+
+##### **Wolumeny**:
+- `es_data:/usr/share/elasticsearch/data`: Przechowuje dane Elasticsearch, zapewniając ich trwałość.
+
+##### **Komenda startowa**:
+Instaluje trzy wtyczki:
+1. **`elasticsearch-analysis-morfologik`**: Analiza morfologiczna dla języka polskiego.
+   ```bash
+   elasticsearch-plugin install --batch com.github.chytreg/elasticsearch-analysis-morfologik/2.3.1
+   ```
+2. **`analysis-stempel`**: Obsługuje stematyzację języka polskiego.
+   ```bash
+   elasticsearch-plugin install --batch analysis-stempel
+   ```
+3. **`elasticsearch-learning-to-rank`**: Wtyczka do uczenia maszynowego dla sortowania wyników.
+   ```bash
+   elasticsearch-plugin install --batch https://github.com/o19s/elasticsearch-learning-to-rank/releases/download/v1.5.4-es7.11.2/ltr-plugin-v1.5.10-es8.15.3.zip
+   ```
+Po instalacji uruchamiany jest standardowy proces Elasticsearch:
+```bash
+/bin/tini -- /usr/local/bin/docker-entrypoint.sh
+```
+
+---
+
+#### **2. Kibana**
+- **Obraz**: `docker.elastic.co/kibana/kibana:8.15.3`
+  - Kibana w wersji `8.15.3`.
+- **Nazwa kontenera**: `kibana`.
+
+##### **Ustawienia środowiskowe**:
+- `ELASTICSEARCH_HOSTS=http://elasticsearch:9200`: Adres Elasticsearch, z którym Kibana się łączy.
+
+##### **Porty**:
+- `5601:5601`: Port interfejsu użytkownika Kibana.
+
+##### **Zależności**:
+- Kibana czeka na uruchomienie Elasticsearch, zanim zostanie uruchomiona (`depends_on`).
+
+---
+
+### **Wolumeny**
+- **`es_data`**:
+  - Typ: `local`.
+  - Przechowuje dane Elasticsearch między restartami kontenerów.
+
+---
+
+### **Uruchamianie**
+1. Zapisz plik jako `docker-compose.yml`.
+2. Uruchom usługi:
+   ```bash
+   docker-compose up -d
+   ```
+
+---
+
+### **Weryfikacja**
+- **Elasticsearch**: Otwórz [http://localhost:9200](http://localhost:9200).
+- **Kibana**: Otwórz [http://localhost:5601](http://localhost:5601).
+- **Wtyczki Elasticsearch**: W terminalu wykonaj:
+   ```bash
+   docker exec -it elasticsearch bin/elasticsearch-plugin list
+   ```
+   Powinny pojawić się:
+   - `analysis-stempel`
+   - `elasticsearch-analysis-morfologik`
+   - `elasticsearch-learning-to-rank`.
+
+---
+
+### **Uwagi**
+- Dopasuj wersje wtyczek do wersji Elasticsearch, aby uniknąć problemów z kompatybilnością.
+- Jeśli używasz tego w środowisku produkcyjnym, rozważ włączenie mechanizmów bezpieczeństwa (`xpack.security`).

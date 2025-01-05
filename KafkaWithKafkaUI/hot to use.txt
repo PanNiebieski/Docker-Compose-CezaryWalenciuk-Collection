@@ -1,0 +1,74 @@
+Uruchomienie usług Otwórz terminal, przejdź do katalogu, w którym znajduje się plik docker-compose.yml i uruchom poniższe polecenie, aby uruchomić wszystkie usługi:
+
+docker-compose up -d
+
+Weryfikacja konfiguracji Aby upewnić się, że wszystko działa zgodnie z oczekiwaniami, można sprawdzić stan kontenerów za pomocą:
+
+docker-compose ps
+
+
+==========================================================
+
+Ten plik `docker-compose.yml` definiuje konfigurację klastru Apache Kafka z trzema brokerami (`kafka1`, `kafka2`, `kafka3`), Zookeeperem i narzędziem Kafka UI do wizualizacji klastru. Oto szczegółowy opis:
+
+---
+
+### **Usługi (`services`)**
+
+#### **1. `zookeeper`**
+- **Funkcja**: Zookeeper zarządza metadanymi klastru Kafka i koordynuje pracę brokerów.
+- **Obraz**: `bitnami/zookeeper:3.9.1`
+- **Tymczasowy system plików**: Montowany na `/zktmp`, aby dane tymczasowe przetrwały restart kontenera.
+- **Porty**:
+  - `2181:2181` - Port 2181 na hoście mapowany na port 2181 w kontenerze, używany do komunikacji z Kafka.
+- **Zmienne środowiskowe**:
+  - `ALLOW_ANONYMOUS_LOGIN: 'yes'` - Zezwala na logowanie bez uwierzytelnienia.
+
+---
+
+#### **2. `kafka1`**
+- **Funkcja**: Pierwszy broker w klastrze Kafka.
+- **Obraz**: `bitnami/kafka:3.7.0`
+- **Zależności**: Czeka na uruchomienie Zookeepera (`depends_on`).
+- **Zmienne środowiskowe**:
+  - `KAFKA_BROKER_ID: 1` - Identyfikator brokera w klastrze.
+  - `KAFKA_CFG_ZOOKEEPER_CONNECT: zookeeper:2181` - Adres Zookeepera.
+  - `KAFKA_CFG_LISTENERS` i `KAFKA_CFG_ADVERTISED_LISTENERS` - Definiują, jak broker komunikuje się wewnętrznie (`INTERNAL`) i zewnętrznie (`EXTERNAL`).
+  - `KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP` - Mapowanie protokołów komunikacji (tu: `PLAINTEXT`).
+  - `KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: 'true'` - Automatyczne tworzenie tematów, jeśli są potrzebne.
+  - `ALLOW_PLAINTEXT_LISTENER: 'yes'` - Zezwala na komunikację bez szyfrowania.
+- **Porty**:
+  - `9092:9092` - Port wewnętrzny brokera.
+  - `29092:29092` - Port zewnętrzny dla lokalnego dostępu.
+- **Wolumeny**:
+  - `kafka_data1` - Przechowuje dane brokera.
+
+Podobna konfiguracja dotyczy brokerów `kafka2` i `kafka3`, różnią się jedynie identyfikatorem brokera (`KAFKA_BROKER_ID`) oraz portami.
+
+---
+
+#### **3. `kafka-ui`**
+- **Funkcja**: Interfejs webowy do monitorowania i zarządzania klastrem Kafka.
+- **Obraz**: `provectuslabs/kafka-ui:latest`
+- **Zależności**: Czeka na uruchomienie wszystkich brokerów (`depends_on`).
+- **Porty**:
+  - `1111:8080` - Port 8080 w kontenerze mapowany na port 1111 na hoście (dostęp do UI).
+- **Zmienne środowiskowe**:
+  - `KAFKA_CLUSTERS_0_NAME: local` - Nazwa klastra.
+  - `KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka1:9092,kafka2:9093,kafka3:9094` - Adresy brokerów.
+  - `KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181` - Adres Zookeepera.
+
+---
+
+### **Wolumeny (`volumes`)**
+- **`kafka_data1`, `kafka_data2`, `kafka_data3`**:
+  - Każdy broker ma osobny wolumen do przechowywania danych. Dzięki temu dane są trwałe, nawet jeśli kontener zostanie zrestartowany.
+
+---
+
+### **Podsumowanie działania**
+1. **Zookeeper** uruchamia się jako pierwszy i koordynuje pracę brokerów.
+2. Trzy brokery Kafka komunikują się z Zookeeperem i między sobą.
+3. **Kafka UI** umożliwia łatwe monitorowanie klastru za pomocą przeglądarki, dostępne na porcie `1111`.
+
+Jeśli potrzebujesz więcej szczegółów na temat konkretnej sekcji, daj znać! 😊
