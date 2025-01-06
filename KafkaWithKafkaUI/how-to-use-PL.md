@@ -30,7 +30,7 @@
   - `ALLOW_PLAINTEXT_LISTENER: 'yes'` - Zezwala na komunikację bez szyfrowania.
 - **Porty**:
   - `9092:9092` - Port wewnętrzny brokera.
-  - `29092:29092` - Port zewnętrzny dla lokalnego dostępu.
+  - `19092:19092` - Port zewnętrzny dla lokalnego dostępu.
 - **Wolumeny**:
   - `kafka_data1` - Wolumen do przechowywania danych brokera.
 
@@ -38,8 +38,8 @@
 - **Podobna konfiguracja** jak dla `kafka1`, ale:
   - **Identyfikator brokera**: `2` i `3`.
   - **Porty**:
-    - `9093:9093` i `29093:29093` dla `kafka2`.
-    - `9094:9094` i `29094:29094` dla `kafka3`.
+    - `9093:9093` i `19093:19093` dla `kafka2`.
+    - `9094:9094` i `19094:19094` dla `kafka3`.
   - **Wolumeny**:
     - `kafka_data2` dla `kafka2`.
     - `kafka_data3` dla `kafka3`.
@@ -72,6 +72,7 @@
 2. **Kafka Brokers**:
    - Trzy brokery komunikują się z Zookeeperem i między sobą.
    - Każdy broker obsługuje inne porty, co pozwala na równoległą pracę w klastrze.
+   - Ich adresy `http://localhost:19092` `http://localhost:19093` `http://localhost:19094`
 3. **Kafka UI**:
    - Dostępny przez przeglądarkę pod adresem `http://localhost:1111`.
    - Umożliwia monitorowanie i zarządzanie klastrem w prosty sposób.
