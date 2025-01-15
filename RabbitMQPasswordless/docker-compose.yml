@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"   # Port protokołu AMQP
+      - "15672:15672" # Port interfejsu zarządzania
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq    # Trwałość danych
+      - rabbitmq_logs:/var/log/rabbitmq   # Przechowywanie logów
+
+volumes:
+  rabbitmq_data:
+    driver: local
+  rabbitmq_logs:
+    driver: local
