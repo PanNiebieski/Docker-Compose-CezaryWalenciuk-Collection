@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  text-generation-inference:
+    image: ghcr.io/huggingface/text-generation-inference:latest
+    ports:
+      - "2222:80"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    shm_size: '1gb'
+    environment:
+      HUGGING_FACE_HUB_TOKEN: hElKgumR # Replace with your token
+    command: --model-id "radlab/polish-sts-v2" # Replace ""radlab/polish-sts-v2"" with the model ID

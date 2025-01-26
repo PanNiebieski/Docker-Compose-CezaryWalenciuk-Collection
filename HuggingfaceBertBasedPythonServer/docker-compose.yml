@@ -1,0 +1,8 @@
+services:
+  huggingface-server:
+    build:
+      context: .
+    ports:
+      - "5000:5000"
+    environment:
+      MODEL_ID:  "radlab/polish-sts-v2" # Replace with any Hugging Face model ID
