@@ -5,4 +5,4 @@ services:
     ports:
       - "5000:5000"
     environment:
-      MODEL_ID:  "radlab/polish-sts-v2" # Replace with any Hugging Face model ID
+      MODEL_ID:  "radlab/polish-sts-v2" # Replace with any BERT Hugging Face model ID that create vectors
