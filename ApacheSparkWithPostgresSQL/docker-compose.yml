@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jupyter_spark
+    ports:
+      - "38888:8888"  # JupyterLab Notebook
+      - "34040:4040"  # Spark UI (if needed)
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=your_password_here
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./notebooks:/home/jovyan/work  # Mount your notebooks directory
+    networks:
+      - spark-network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sparkdb
+    ports:
+      - "35432:5432"
+    networks:
+      - spark-network
+
+networks:
+  spark-network:
+    driver: bridge

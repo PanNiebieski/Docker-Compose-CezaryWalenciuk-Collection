@@ -28,6 +28,7 @@ async def load_model():
         print(f"Loading model: {model_id}")
         tokenizer = AutoTokenizer.from_pretrained(model_id)
         model = AutoModel.from_pretrained(model_id)
+        print(f"Model path {tokenizer.cache_dir} l")
         embedder = pipeline("feature-extraction", model=model, tokenizer=tokenizer)
         print(f"Model {model_id} loaded successfully!")
     except Exception as e:

@@ -1,0 +1,1 @@
+SELECT c.user AS unique_user, LOWER(q.sql
