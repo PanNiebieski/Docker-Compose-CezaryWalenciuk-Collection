@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApacheSparkWithCSharp", "ApacheSparkWithCSharp", "{D3F9E1B2-FDA2-C93F-B102-DC0367FF8CE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MySparkApp", "ApacheSparkWithCSharp\MySparkApp\MySparkApp.csproj", "{C8413D86-0291-477E-6D24-A33273D5A767}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8413D86-0291-477E-6D24-A33273D5A767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8413D86-0291-477E-6D24-A33273D5A767}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8413D86-0291-477E-6D24-A33273D5A767}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8413D86-0291-477E-6D24-A33273D5A767}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C8413D86-0291-477E-6D24-A33273D5A767} = {D3F9E1B2-FDA2-C93F-B102-DC0367FF8CE4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C8BF064A-7FC6-4CB0-BF49-83FB821CBE08}
+	EndGlobalSection
+EndGlobal

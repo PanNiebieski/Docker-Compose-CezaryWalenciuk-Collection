@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jupyter_spark_dotnet
+    ports:
+      - "38888:8888"  # JupyterLab
+      - "34040:4040"  # Spark UI
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=your_password_here
+      - PYTHONUNBUFFERED=1
+      - DOTNET_WORKER_DIR=/opt/microsoft-spark/Microsoft.Spark.Worker-2.1.1
+      - SPARK_HOME=/usr/local/spark
+    volumes:
+      - ./notebooks:/home/jovyan/work/notebooks  # Python notebooks
+      - ./MySparkApp:/home/jovyan/work/MySparkApp  # C# Spark application
+    networks:
+      - spark-network
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: sparkdb
+    ports:
+      - "35432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - spark-network
+
+networks:
+  spark-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

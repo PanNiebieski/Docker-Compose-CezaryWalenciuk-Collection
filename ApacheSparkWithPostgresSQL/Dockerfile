@@ -1,21 +1,49 @@
-# Use the official Jupyter base image that includes JupyterLab 3+
-FROM jupyter/base-notebook:latest
-
-# Switch to root to install additional packages if needed
+# Użyj oficjalnego obrazu Jupyter, który zawiera JupyterLab 3+
+FROM jupyter/base-notebook:python-3.11.6
+# Etykiety metadanych dla łatwiejszego śledzenia i zarządzania
+LABEL maintainer="c@gmail.com" \
+      version="1.0" \
+      description="Obraz Jupyter Notebook z rozszerzeniami ułatwiającymi debugowanie, kontrolę wersji i formatowanie kodu."
+# Zainstaluj OpenJDK
 USER root
-# (Optional) Install any system packages you might need
-RUN apt-get update && apt-get install -y build-essential && rm -rf /var/lib/apt/lists/*
-
-# Switch back to the notebook user
-USER $NB_UID
-
-# Install required Python packages for debugging
-RUN pip install --no-cache-dir ipykernel>=6.0 ipdb debugpy
-
-# Note: No need to install @jupyterlab/debugger as prebuilt extensions are used
-
-# Set the working directory
+RUN apt-get update && apt-get install -y openjdk-11-jdk && \
+    rm -rf /var/lib/apt/lists/*
+# Ustaw zmienną środowiskową JAVA_HOME
+ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+USER ${NB_UID}
+# Przełącz na użytkownika root, aby zainstalować pakiety systemowe
+USER root
+# Zainstaluj pakiety systemowe (np. narzędzia do kompilacji, git) i wyczyść po instalacji
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
+      git && \
+    rm -rf /var/lib/apt/lists/*
+# Przełącz z powrotem na użytkownika notebooka
+USER ${NB_UID}
+# Zaktualizuj pip i zainstaluj dodatkowe pakiety Python oraz rozszerzenia JupyterLab
+RUN pip install --upgrade pip && \
+    pip install --no-cache-dir \
+      ipykernel>=6.0 \
+      ipdb \
+      debugpy \
+      jupyterlab-git \
+      nbdime \
+      jupyterlab-lsp \
+      jupyterlab-code-formatter \
+      autopep8
+# Zainstaluj wymagane pakiety Python
+RUN pip install --no-cache-dir \
+    pyspark \
+    psycopg2-binary \
+    pandas
+# Upewnij się, że JupyterLab jest włączony
+ENV JUPYTER_ENABLE_LAB=yes
+# Ustaw katalog roboczy
 WORKDIR /home/jovyan/work
-
-# Start Jupyter Notebook (JupyterLab will be the default with JUPYTER_ENABLE_LAB)
+# Odsłoń domyślny port Jupyter
+EXPOSE 8888
+# Sprawdzenie stanu, aby zweryfikować, czy serwer Jupyter jest aktywny
+HEALTHCHECK --interval=30s --timeout=10s CMD curl --fail http://localhost:8888/api || exit 1
+# Uruchom Jupyter Notebook (domyślnie JupyterLab)
 CMD ["start-notebook.sh"]

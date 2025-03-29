@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "dgSpecHash": "RsWnJLetbyE=",
+  "success": true,
+  "projectFilePath": "D:\\PanNiebieski\\Webinary\\Docker\\ApacheSparkWithCSharp\\MySparkApp\\MySparkApp.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Cezary\\.nuget\\packages\\apache.arrow\\2.0.0\\apache.arrow.2.0.0.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\microsoft.data.analysis\\0.18.0\\microsoft.data.analysis.0.18.0.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\microsoft.ml.dataview\\1.6.0\\microsoft.ml.dataview.1.6.0.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\microsoft.spark\\2.1.1\\microsoft.spark.2.1.1.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\razorvine.pyrolite\\4.26.0\\razorvine.pyrolite.4.26.0.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\razorvine.serpent\\1.29.0\\razorvine.serpent.1.29.0.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\microsoft.netcore.app.ref\\7.0.20\\microsoft.netcore.app.ref.7.0.20.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\7.0.20\\microsoft.windowsdesktop.app.ref.7.0.20.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\7.0.20\\microsoft.aspnetcore.app.ref.7.0.20.nupkg.sha512",
+    "C:\\Users\\Cezary\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\7.0.20\\microsoft.netcore.app.host.win-x64.7.0.20.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,5 @@
+spark-submit \
+--class org.apache.spark.deploy.dotnet.DotnetRunner \
+--master local \
+MySparkApp/bin/Debug/net9.0/microsoft-spark-3-1_2.12-2.0.0.jar \
+dotnet MySparkApp/bin/Debug/net6.0/MySparkApp.dll MySparkApp/input.txt
