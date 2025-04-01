@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MySparkApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c80f9b1b4035806088f582808781be9eb6fa1848")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ee3bb3d2945aebe6a3c2e8866b12acc32a1c29a0")]
 [assembly: System.Reflection.AssemblyProductAttribute("MySparkApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MySparkApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
