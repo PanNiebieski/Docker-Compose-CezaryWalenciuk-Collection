@@ -1,104 +1,123 @@
-
+version: "3.8"
 
 services:
-  # Pierwszy klaster Elasticsearch
-  elasticsearch_1:
+  es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
-    container_name: elasticsearch_1
+    container_name: es01
     environment:
-      - cluster.name=elasticsearch-cluster-1
-      - discovery.type=single-node
-      - xpack.security.enabled=false
+      - node.name=es01
+      - cluster.name=es-cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es02,es03
+      - network.host=0.0.0.0
       - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.monitoring.collection.enabled=true
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     ports:
-      - "9200:9200" # Port REST API Elasticsearch
-      - "9300:9300" # Port transportowy
+      - "9200:9200"
     volumes:
-      - es_data_1:/usr/share/elasticsearch/data
+      - esdata01:/usr/share/elasticsearch/data
     command: >
       bash -c "
-      elasticsearch-plugin install --batch com.github.chytreg/elasticsearch-analysis-morfologik/2.3.1 &&
-      elasticsearch-plugin install --batch analysis-stempel &&
-      elasticsearch-plugin install --batch https://github.com/o19s/elasticsearch-learning-to-rank/releases/download/v1.5.4-es7.11.2/ltr-plugin-v1.5.10-es8.15.3.zip &
+      if [ ! -d /usr/share/elasticsearch/plugins/analysis-morfologik ]; then
+        elasticsearch-plugin install --batch pl.allegro.tech.elasticsearch.plugin:elasticsearch-analysis-morfologik:8.15.3;
+      fi &&
+      if [ ! -d /usr/share/elasticsearch/plugins/analysis-stempel ]; then
+        elasticsearch-plugin install --batch analysis-stempel;
+      fi &&
+      if [ ! -d /usr/share/elasticsearch/plugins/ltr ]; then
+        elasticsearch-plugin install --batch https://github.com/o19s/elasticsearch-learning-to-rank/releases/download/v1.5.10-es8.15.3/ltr-plugin-v1.5.10-es8.15.3.zip;
+      fi &&
       /bin/tini -- /usr/local/bin/docker-entrypoint.sh
       "
 
-  # Drugi klaster Elasticsearch
-  elasticsearch_2:
+  es02:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
-    container_name: elasticsearch_2
+    container_name: es02
     environment:
-      - cluster.name=elasticsearch-cluster-2
-      - discovery.type=single-node
-      - xpack.security.enabled=false
+      - node.name=es02
+      - cluster.name=es-cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es03
+      - network.host=0.0.0.0
       - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.monitoring.collection.enabled=true
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    ports:
-      - "9201:9200" # Port REST API Elasticsearch
-      - "9301:9300" # Port transportowy
     volumes:
-      - es_data_2:/usr/share/elasticsearch/data
+      - esdata02:/usr/share/elasticsearch/data
     command: >
       bash -c "
-      elasticsearch-plugin install --batch com.github.chytreg/elasticsearch-analysis-morfologik/2.3.1 &&
-      elasticsearch-plugin install --batch analysis-stempel &&
-      elasticsearch-plugin install --batch https://github.com/o19s/elasticsearch-learning-to-rank/releases/download/v1.5.4-es7.11.2/ltr-plugin-v1.5.10-es8.15.3.zip &
+      if [ ! -d /usr/share/elasticsearch/plugins/analysis-morfologik ]; then
+        elasticsearch-plugin install --batch pl.allegro.tech.elasticsearch.plugin:elasticsearch-analysis-morfologik:8.15.3;
+      fi &&
+      if [ ! -d /usr/share/elasticsearch/plugins/analysis-stempel ]; then
+        elasticsearch-plugin install --batch analysis-stempel;
+      fi &&
+      if [ ! -d /usr/share/elasticsearch/plugins/ltr ]; then
+        elasticsearch-plugin install --batch https://github.com/o19s/elasticsearch-learning-to-rank/releases/download/v1.5.10-es8.15.3/ltr-plugin-v1.5.10-es8.15.3.zip;
+      fi &&
       /bin/tini -- /usr/local/bin/docker-entrypoint.sh
       "
 
-  # Trzeci klaster Elasticsearch
-  elasticsearch_3:
+  es03:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
-    container_name: elasticsearch_3
+    container_name: es03
     environment:
-      - cluster.name=elasticsearch-cluster-3
-      - discovery.type=single-node
-      - xpack.security.enabled=false
+      - node.name=es03
+      - cluster.name=es-cluster
+      - cluster.initial_master_nodes=es01,es02,es03
+      - discovery.seed_hosts=es01,es02
+      - network.host=0.0.0.0
       - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.monitoring.collection.enabled=true
       - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    ports:
-      - "9202:9200" # Port REST API Elasticsearch
-      - "9302:9300" # Port transportowy
     volumes:
-      - es_data_3:/usr/share/elasticsearch/data
+      - esdata03:/usr/share/elasticsearch/data
     command: >
       bash -c "
-      elasticsearch-plugin install --batch com.github.chytreg/elasticsearch-analysis-morfologik/2.3.1 &&
-      elasticsearch-plugin install --batch analysis-stempel &&
-      elasticsearch-plugin install --batch https://github.com/o19s/elasticsearch-learning-to-rank/releases/download/v1.5.4-es7.11.2/ltr-plugin-v1.5.10-es8.15.3.zip &
+      if [ ! -d /usr/share/elasticsearch/plugins/analysis-morfologik ]; then
+        elasticsearch-plugin install --batch pl.allegro.tech.elasticsearch.plugin:elasticsearch-analysis-morfologik:8.15.3;
+      fi &&
+      if [ ! -d /usr/share/elasticsearch/plugins/analysis-stempel ]; then
+        elasticsearch-plugin install --batch analysis-stempel;
+      fi &&
+      if [ ! -d /usr/share/elasticsearch/plugins/ltr ]; then
+        elasticsearch-plugin install --batch https://github.com/o19s/elasticsearch-learning-to-rank/releases/download/v1.5.10-es8.15.3/ltr-plugin-v1.5.10-es8.15.3.zip;
+      fi &&
       /bin/tini -- /usr/local/bin/docker-entrypoint.sh
       "
 
-  # Kibana
   kibana:
     image: docker.elastic.co/kibana/kibana:8.15.3
     container_name: kibana
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch_1:9200,http://elasticsearch_2:9201,http://elasticsearch_3:9202
+      - ELASTICSEARCH_HOSTS=http://es01:9200
     ports:
       - "5601:5601"
     depends_on:
-      - elasticsearch_1
-      - elasticsearch_2
-      - elasticsearch_3
+      - es01
+      - es02
+      - es03
 
 volumes:
-  es_data_1:
+  esdata01:
     driver: local
-  es_data_2:
+  esdata02:
     driver: local
-  es_data_3:
+  esdata03:
     driver: local
