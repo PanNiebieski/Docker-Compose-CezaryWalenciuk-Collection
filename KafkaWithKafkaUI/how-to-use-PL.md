@@ -82,3 +82,9 @@
 ## **Uwagi**
 - Zmienne środowiskowe w konfiguracji pozwalają na dużą elastyczność i dostosowanie klastra do różnych potrzeb.
 - Porty **INTERNAL** są używane wewnętrznie przez brokerów, natomiast porty **EXTERNAL** są wystawiane na zewnątrz, aby aplikacje mogły łączyć się z Kafką.
+
+##Jeżeli są jakieś problemy to warto skasować wszystko
+
+docker-compose down -v
+
+docker-compose up -d
