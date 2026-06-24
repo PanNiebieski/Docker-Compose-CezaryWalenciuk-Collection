@@ -19,7 +19,7 @@ services:
         soft: -1
         hard: -1
     ports:
-      - "9200:9200"
+      - "29200:9200"
     volumes:
       - esdata01:/usr/share/elasticsearch/data
     command: >
@@ -55,6 +55,8 @@ services:
         hard: -1
     volumes:
       - esdata02:/usr/share/elasticsearch/data
+    ports:
+      - "29201:9201"
     command: >
       bash -c "
       if [ ! -d /usr/share/elasticsearch/plugins/analysis-morfologik ]; then
@@ -88,6 +90,8 @@ services:
         hard: -1
     volumes:
       - esdata03:/usr/share/elasticsearch/data
+    ports:
+      - "29202:9202"  
     command: >
       bash -c "
       if [ ! -d /usr/share/elasticsearch/plugins/analysis-morfologik ]; then
